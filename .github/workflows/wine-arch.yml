@@ -17,7 +17,13 @@ jobs:
           XDG_CACHE_HOME: /tmp/.cache
         run: |
           echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-          pacman -Syu --noconfirm base-devel sudo
+          pacman -Syu --noconfirm base-devel sudo zstd tar
+
+          # Install ntsync headers
+          wget https://github.com/Morganamilo/paru/releases/download/v2.0.4/paru-v2.0.4-x86_64.tar.zst
+          tar xvf paru-v2.0.4-x86_64.tar.zst paru
+          ./paru -S --noconfirm ntsync-header
+          
           useradd user -G wheel && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
           chown user -R . && cd wine-tkg-git
           sed -i 's/wayland_driver="false"/wayland_driver="true"/' customization.cfg
